@@ -4,7 +4,7 @@ namespace PasswordProtectedPosts;
 /*
 Plugin Name: Password Protected Posts
 Description: Adds password protection to post archives and individual posts.
-Version: 1.0
+Version: 1.1
 Author: Niku Hietanen
 */
 
@@ -73,7 +73,11 @@ function render_password_field()
 
 function check_for_password()
 {
-    if (is_single() || is_archive()) {
+    if (current_user_can('administrator')) {
+        return;
+    }
+
+    if (is_singular('post') || is_home()) {
         if (! isset($_COOKIE['ppp_auth']) || $_COOKIE['ppp_auth'] !== md5(get_option('ppp_password'))) {
             if (isset($_POST['ppp_password']) && $_POST['ppp_password'] === get_option('ppp_password')) {
 
